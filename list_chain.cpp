@@ -1,5 +1,11 @@
 #include "list_chain.h"
 
+list_chain::list_chain(std::list<list_node_chain*> nodes)
+{
+	this->head = nodes.front();
+	this->_length = nodes.size();
+}
+
 void list_chain::append(list_node_chain* element)
 {
 	if (head == nullptr)
@@ -111,7 +117,7 @@ void list_chain::sort()
 	for (int i(0); i < _length; i++) {
 		for (int j(1); j < _length; j++) {
 			if (getByNumber(j)->value < getByNumber(j - 1)->value) {
-				swap(getByNumber(j), getByNumber(j - 1));
+				swap(getByNumber(j - 1), getByNumber(j));
 			}
 		}
 	}
@@ -126,9 +132,4 @@ std::string list_chain::to_string()
 		result += std::to_string(top->value) + " -> ";
 	}
 	return result + "NULL";
-}
-
-int list_chain::length()
-{
-	return _length;
 }
