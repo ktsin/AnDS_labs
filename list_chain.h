@@ -16,6 +16,7 @@ public:
 	virtual void remove(int position) override;
 	virtual int  length() override { return this->_length; }
 	virtual void sort() override;
+	virtual void task1() override;
 	virtual std::string to_string() override;
 private:
 	list_node_chain* head = nullptr;

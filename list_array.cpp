@@ -80,46 +80,49 @@ void list_array::swap(list_node_array* left, list_node_array* right)
 	//}
 	if (left == right)
 		return;
+	auto head = &(this->_array[headNumber]);
 	auto* preLeft = head, * preRight = head, * top = head;
 	while (top != left) {
 		preLeft = top;
-		top = top->next;
+		top = &(_array[top->next]);
 	}
 	top = head;
 	while (top != right)
 	{
 		preRight = top;
-		top = top->next;
+		top = &(_array[top->next]);
 	}
 	top = head;
 	if (preLeft == left) {
-		if (left->next == right) {
+		if (&(_array[left->next]) == right) {
 			auto tmp = right->next;
 			left->next = tmp;
-			right->next = left;
+			right->next = indexOfPointer(left);
 			this->head = right;
+			this->headNumber = indexOfPointer(right);
 		}
 		else {
 			this->head = right;
+			this->headNumber = indexOfPointer(right);
 			auto rN = right->next;
 			right->next = left->next;
 			left->next = rN;
-			preRight->next = left;
+			preRight->next = indexOfPointer(left);
 		}
 		return;
 	}
 	else {
 		if (left != preRight) {
-			preLeft->next = right;
-			preRight->next = left;
+			preLeft->next = indexOfPointer( right);
+			preRight->next = indexOfPointer( left);
 			auto rN = right->next;
 			right->next = left->next;
 			left->next = rN;
 		}
 		else {
-			preLeft->next = right;
+			preLeft->next = this->indexOfPointer(right);
 			left->next = right->next;
-			right->next = left;
+			right->next = this->indexOfPointer(left);
 		}
 	}
 }
@@ -199,4 +202,26 @@ int list_array::indexOfPointer(list_node_array* ptr)
 		return number;
 	else
 		return -1;
+}
+
+void list_array::task1()
+{
+	//повторяющиеся переместить в конец
+	int len = length();
+	for (int i(0); i < len - 1; i++) {
+		//ищем элемент в массиве. Если его больше 1-го, то все найденые
+		//закидываем в конец, i = 0, len -= count(найденые эл-ы)
+		bool flag = false;
+		for (int j = i + 1; j < len; j++) {
+			if (getByNumber(i)->value == getByNumber(j)->value) {
+				this->swap(getByNumber(j), getByNumber(len - 1));
+				--len;
+				flag = true;
+			}
+		}
+		if (flag) {
+			this->swap(getByNumber(i), getByNumber(len - 1));
+			len--;
+		}
+	}
 }

@@ -14,5 +14,6 @@ public:
 	virtual int  length() = 0;
 	virtual void sort() = 0;
 	virtual std::string to_string() = 0;
+	virtual void task1() = 0;
 };
 
