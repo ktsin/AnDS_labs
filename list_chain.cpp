@@ -56,7 +56,7 @@ void list_chain::swap(list_node_chain* left, list_node_chain* right)
 {
 	if (left == right)
 		return;
-	list_node_chain* preLeft = head, * preRight = head, *top = head;
+	auto* preLeft = head, * preRight = head, *top = head;
 	while (top != left) {
 		preLeft = top;
 		top = top->next;
@@ -69,22 +69,35 @@ void list_chain::swap(list_node_chain* left, list_node_chain* right)
 	}
 	top = head;
 	if (preLeft == left) {
-		//we are in start => must change head pointer
-		head = right;
-		auto tmp = right->next;
-		right->next = left->next;
-		left->next = tmp;
-		preRight->next = left;
+		if (left->next == right) {
+			auto tmp = right->next;
+			left->next = tmp;
+			right->next = left;
+			this->head = right;
+		}
+		else {
+			this->head = right;
+			auto rN = right->next;
+			right->next = left->next;
+			left->next = rN;
+			preRight->next = left;
+		}
 		return;
 	}
 	else {
-		preLeft->next = right;
-		preRight->next = left;
-		auto tmp = left->next;
-		left->next = right->next;
-		right->next = tmp;
+		if (left != preRight) {
+			preLeft->next = right;
+			preRight->next = left;
+			auto rN = right->next;
+			right->next = left->next;
+			left->next = rN;
+		}
+		else {
+			preLeft->next = right;
+			left->next = right->next;
+			right->next = left;
+		}
 	}
-
 }
 
 void list_chain::remove(int position)
@@ -114,8 +127,8 @@ void list_chain::remove(int position)
 
 void list_chain::sort()
 {
-	for (int i(0); i < _length; i++) {
-		for (int j(1); j < _length; j++) {
+	for (int i(0); i < length(); i++) {
+		for (int j(1); j < length(); j++) {
 			if (getByNumber(j)->value < getByNumber(j - 1)->value) {
 				swap(getByNumber(j - 1), getByNumber(j));
 			}
@@ -127,9 +140,10 @@ std::string list_chain::to_string()
 {
 	list_node_chain *top = head;
 	std::string result = "";
-	while (top != nullptr)
+	for(int i(0); i < length(); i++)
 	{
 		result += std::to_string(top->value) + " -> ";
+		top = top->next;
 	}
 	return result + "NULL";
 }

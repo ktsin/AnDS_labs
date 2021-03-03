@@ -10,7 +10,8 @@ list_array::list_array(std::vector<list_node_array> _values)
 void list_array::append(list_node_array* element)
 {
 	auto last = this->getByNumber(_array.size() - 1);
-	last->next = _array.size();
+	if(last != nullptr)
+		last->next = _array.size();
 	_array.push_back(*element);
 }
 
@@ -45,37 +46,81 @@ list_node_array* list_array::getByNumber(int position)
 
 void list_array::swap(list_node_array* left, list_node_array* right)
 {
+	//if (left == right)
+	//	return;
+	//auto head = &_array.data()[headNumber];
+	//auto* preLeft = head, * preRight = head, * top = head;
+	//while (top != left) {
+	//	preLeft = top;
+	//	top = &_array[top->next];
+	//}
+	//top = head;
+	//while (top != right)
+	//{
+	//	preRight = top;
+	//	top = &_array[top->next];
+	//}
+	//top = head;
+	//if (preLeft == left) {
+	//	//we are in start => must change head pointer
+	//	this->head = right;
+	//	headNumber = indexOfPointer(right);
+	//	auto tmp = right->next;
+	//	right->next = left->next;
+	//	left->next = tmp;
+	//	preRight->next = indexOfPointer(left);
+	//	return;
+	//}
+	//else {
+	//	preLeft->next = indexOfPointer(right);
+	//	preRight->next = indexOfPointer(left);
+	//	auto tmp = left->next;
+	//	left->next = right->next;
+	//	right->next = tmp;
+	//}
 	if (left == right)
 		return;
-	head = &_array.data()[headNumber];
 	auto* preLeft = head, * preRight = head, * top = head;
 	while (top != left) {
 		preLeft = top;
-		top = &_array[top->next];
+		top = top->next;
 	}
 	top = head;
 	while (top != right)
 	{
 		preRight = top;
-		top = &_array[top->next];
+		top = top->next;
 	}
 	top = head;
 	if (preLeft == left) {
-		//we are in start => must change head pointer
-		head = right;
-		headNumber = indexOfPointer(right);
-		auto tmp = right->next;
-		right->next = left->next;
-		left->next = tmp;
-		preRight->next = indexOfPointer(left);
+		if (left->next == right) {
+			auto tmp = right->next;
+			left->next = tmp;
+			right->next = left;
+			this->head = right;
+		}
+		else {
+			this->head = right;
+			auto rN = right->next;
+			right->next = left->next;
+			left->next = rN;
+			preRight->next = left;
+		}
 		return;
 	}
 	else {
-		preLeft->next = indexOfPointer(right);
-		preRight->next = indexOfPointer(left);
-		auto tmp = left->next;
-		left->next = right->next;
-		right->next = tmp;
+		if (left != preRight) {
+			preLeft->next = right;
+			preRight->next = left;
+			auto rN = right->next;
+			right->next = left->next;
+			left->next = rN;
+		}
+		else {
+			preLeft->next = right;
+			left->next = right->next;
+			right->next = left;
+		}
 	}
 }
 
@@ -91,8 +136,8 @@ void list_array::remove(int position)
 
 void list_array::sort()
 {
-	for (int i(0); i < _length; i++) {
-		for (int j(1); j < _length; j++) {
+	for (int i(0); i < length(); i++) {
+		for (int j(1); j < length(); j++) {
 			if (getByNumber(j)->value < getByNumber(j - 1)->value) {
 				swap(getByNumber(j - 1), getByNumber(j));
 			}
@@ -102,7 +147,17 @@ void list_array::sort()
 
 std::string list_array::to_string()
 {
-	return std::string();
+	if (this->length() > 0) {
+		std::string result = "";
+		for (int i(0); i < this->length(); i++) {
+			auto element = this->getByNumber(i);
+			result += std::string("(") + std::to_string(element->value) + std::string("; ") + std::to_string(element->next) + std::string(") -> ");
+		}
+		result += std::string("NULL");
+		return result;
+	}
+	else
+		return std::string("NULL");
 }
 
 bool list_array::checkConsitency()

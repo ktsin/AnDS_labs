@@ -150,6 +150,7 @@
     <ClInclude Include="list_array.h" />
     <ClInclude Include="list_chain.h" />
     <ClInclude Include="list_node.h" />
+    <ClInclude Include="taskHost.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
