@@ -10,7 +10,7 @@ list_array::list_array(std::vector<list_node_array> _values)
 void list_array::append(list_node_array* element)
 {
 	auto last = this->getByNumber(_array.size() - 1);
-	if(last != nullptr)
+	if (last != nullptr)
 		last->next = _array.size();
 	_array.push_back(*element);
 }
@@ -113,8 +113,8 @@ void list_array::swap(list_node_array* left, list_node_array* right)
 	}
 	else {
 		if (left != preRight) {
-			preLeft->next = indexOfPointer( right);
-			preRight->next = indexOfPointer( left);
+			preLeft->next = indexOfPointer(right);
+			preRight->next = indexOfPointer(left);
 			auto rN = right->next;
 			right->next = left->next;
 			left->next = rN;
@@ -129,12 +129,34 @@ void list_array::swap(list_node_array* left, list_node_array* right)
 
 void list_array::remove(int position)
 {
-	_array.erase(_array.begin() + position);
-	//tckb next > position => next--
+	if (position < 0 || position >= this->length())
+		return;
+	auto elementPtr = getByNumber(position);
+	auto indexOfElement = indexOfPointer(elementPtr);
+	_array.erase(_array.begin() + indexOfElement);
 	for (auto iter = _array.begin(); iter != _array.end(); iter++) {
 		if ((*iter).next > position)
 			(*iter).next--;
 	}
+	//if (position != headNumber) {
+	//	_array.erase(_array.begin() + position);
+	//	if (headNumber >= position)
+	//		headNumber--;
+	//}
+	//else
+	//{
+	//	headNumber = (*(_array.begin() + position)).next;
+	//	if (headNumber >= position)
+	//		headNumber--;
+	//	_array.erase(_array.begin() + position);
+
+	//}
+	////tckb next > position => next--
+	//for (auto iter = _array.begin(); iter != _array.end(); iter++) {
+	//	if ((*iter).next > position)
+	//		(*iter).next--;
+	//}
+	//
 }
 
 void list_array::sort()
@@ -221,6 +243,26 @@ void list_array::task1()
 		}
 		if (flag) {
 			this->swap(getByNumber(i), getByNumber(len - 1));
+			len--;
+		}
+	}
+}
+
+void list_array::defence()
+{
+	int len = length();
+	for (int i(0); i < len - 1; i++) {
+		bool flag = false;
+		//this->_array = this->_array;
+		for (int j = i + 1; j < len; j++) {
+			if (_array.at(i).value == _array.at(j).value) {
+				this->remove(j);
+				--len;
+				flag = true;
+			}
+		}
+		if (flag) {
+			this->remove(i);
 			len--;
 		}
 	}

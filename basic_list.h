@@ -15,5 +15,6 @@ public:
 	virtual void sort() = 0;
 	virtual std::string to_string() = 0;
 	virtual void task1() = 0;
+	virtual void defence() = 0;
 };
 

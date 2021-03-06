@@ -72,12 +72,25 @@ int main()
     std::cout << "Array: " << array->to_string() << std::endl;
     std::cout << "List: " << chain->to_string() << std::endl;
 
-    std::cout << std::endl << "==== \t TASK _1 \t ====" << std::endl;
+    //std::cout << std::endl << "==== \t TASK _1 \t ====" << std::endl;
 
-    array->task1();
-    chain->task1();
+    //array->task1();
+    //chain->task1();
 
-    std::cout << "Array and list: " << std::endl;
-    std::cout << "Array: " << array->to_string() << std::endl;
-    std::cout << "List: " << chain->to_string() << std::endl;
+    //std::cout << "Array and list: " << std::endl;
+    //std::cout << "Array: " << array->to_string() << std::endl;
+    //std::cout << "List: " << chain->to_string() << std::endl;
+
+    std::cout << std::endl << "==== \t DEFENCE \t ====" << std::endl;
+    try {
+        array->defence();
+        chain->defence();
+
+        std::cout << "Array and list: " << std::endl;
+        std::cout << "Array: " << array->to_string() << std::endl;
+        std::cout << "List: " << chain->to_string() << std::endl;
+    }
+    catch (std::exception& ex) {
+        std::cout << ex.what();
+    }
 }

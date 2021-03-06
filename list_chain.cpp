@@ -169,3 +169,25 @@ std::string list_chain::to_string()
 	}
 	return result + "NULL";
 }
+
+void list_chain::defence()
+{
+	//повторяющиеся переместить в конец
+	int len = length();
+	for (int i(0); i < len - 1; i++) {
+		//ищем элемент в массиве. Если его больше 1-го, то все найденые
+		//закидываем в конец, i = 0, len -= count(найденые эл-ы)
+		bool flag = false;
+		for (int j = i + 1; j < len; j++) {
+			if (getByNumber(i)->value == getByNumber(j)->value) {
+				this->remove(j);
+				--len;
+				flag = true;
+			}
+		}
+		if (flag) {
+			this->remove(i);
+			len--;
+		}
+	}
+}

@@ -18,6 +18,7 @@ public:
 	virtual void sort() override;
 	virtual void task1() override;
 	virtual std::string to_string() override;
+	virtual void defence() override;
 private:
 	list_node_chain* head = nullptr;
 	int _length = 0;

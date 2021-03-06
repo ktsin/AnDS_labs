@@ -20,6 +20,7 @@ public:
 	bool checkConsitency();
 	int indexOfPointer(list_node_array* ptr);
 	virtual void task1() override;
+	virtual void defence() override;
 private:
 	std::vector<list_node_array> _array  = std::vector<list_node_array>();
 	list_node_array* head = nullptr;
