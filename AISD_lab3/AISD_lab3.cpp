@@ -9,6 +9,7 @@
 
 #define DATA_SIZE 10
 #define PRINT
+#define DEFEND_
 
 time_t inputDate();
 bool cmpFirst_Up(record& a, record& b);
@@ -30,6 +31,7 @@ int main()
     srand(rand());
     std::ios::sync_with_stdio(false);
     std::cout << "Lab 3!\n";
+#ifndef DEFEND_
     std::vector<record> data;
     data.resize(DATA_SIZE);
     for (int i = 0; i < DATA_SIZE; i++)
@@ -123,6 +125,18 @@ int main()
         cout << "not found!" << '\n';
 #pragma endregion
 
+#endif // !DEFEND
+#ifdef DEFEND_
+    std::vector<drecord> data;
+    data.resize(DATA_SIZE);
+    for (int i = 0; i < DATA_SIZE; i++)
+    {
+        data[i] = drecord();
+    }
+
+#endif // DEFEND_
+
+    
     }
 
 time_t inputDate() {

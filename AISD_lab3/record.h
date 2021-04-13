@@ -28,6 +28,9 @@ public:
 			(*field_3)[i] = rand() % 5 + 97;
 		}
 	}
+	~record() {
+		delete field_3;
+	}
 	string to_string()
 	{
 		std::stringstream ss;
@@ -43,6 +46,24 @@ public:
 	time_t field_1 = 0;
 	time_t field_2 = 0;
 	string* field_3 = nullptr;
+};
+
+class drecord {
+public:
+	drecord() {
+		auto field_1_tm = new tm();
+		auto field_2_tm = new tm();
+		field_1_tm->tm_year = field_2_tm->tm_year = 121;
+		field_1_tm->tm_mday = field_2_tm->tm_mday = rand() % 10;
+		field_1_tm->tm_mon = rand() % 6 + 1;
+		field_2_tm->tm_mon = rand() % 4 + 3;
+		field_1 = mktime(field_1_tm);
+		field_2 = mktime(field_2_tm);
+		delete field_1_tm;
+		delete field_2_tm;
+	}
+	time_t field_1 = 0;
+	time_t field_2 = 0;
 };
 
 class score {

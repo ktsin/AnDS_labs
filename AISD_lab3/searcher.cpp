@@ -12,12 +12,11 @@ int searcher::barierSearch(vector<record>& data, function<bool(record&, record&)
 	while (!comparer(data[i], target)) {
 		i++;
 	}
+	(*data.rbegin()) = rec;
 	if (i == data.size() - 1) {
-		(*data.rbegin()) = rec;
 		return -1;
 	}
 	else {
-		(*data.rbegin()) = rec;
 		return i;
 	}
 }

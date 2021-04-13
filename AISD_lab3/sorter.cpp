@@ -140,3 +140,70 @@ bool sorter::isSorted(std::vector<record>& array, std::function<bool(record&, re
 	}
 	return isSorted;
 }
+
+void dsorter::BubbleSort(std::vector<drecord>& array, std::function<bool(drecord&, drecord&)> cmp, score& sc, bool check)
+{
+	bool isSorted = false;
+	for (int i(0); i < array.size() && !isSorted; i++) {
+		for (int j(1); j < array.size() && !isSorted; j++) {
+			if (check)
+				isSorted = dsorter::isSorted(array, cmp, sc);
+			sc.compares++;
+			if (!cmp(array[j], array[j - 1])) {
+				sc.permutations++;
+				std::swap(array[j], array[j - 1]);
+			}
+		}
+	}
+}
+
+void dsorter::BubbleSortBy2(std::vector<drecord>& array, std::function<bool(drecord&, drecord&)> cmp, score& sc, bool check)
+{
+	bool isSorted = false;
+	int start = 0, last = array.size() - 1;
+	while (last <= array.size())
+	{
+		time_t element = array[last].field_1;
+		start = last;
+		while (array[last].field_1 == element)
+		{
+			last++;
+			sc.compares++;
+		}
+		for (int i(start); i < last && !isSorted; i++) {
+			for (int j(start + 1); j < last && !isSorted; j++) {
+				if (check)
+					isSorted = dsorter::isSorted(array, cmp, sc, start, last);
+				sc.compares++;
+				if (!cmp(array[j], array[j - 1])) {
+					sc.permutations++;
+					std::swap(array[j], array[j - 1]);
+				}
+			}
+		}
+	}
+}
+
+bool dsorter::isSorted(std::vector<drecord>& array, std::function<bool(drecord&, drecord&)> cmp, score& sc)
+{
+	bool isSorted = true;
+	for (int i(0); i < array.size() - 1 && isSorted; i++) {
+		sc.compares++;
+		if (!cmp(array[i], array[i + 1])) {
+			isSorted = false;
+		}
+	}
+	return isSorted;
+}
+
+bool dsorter::isSorted(std::vector<drecord>& array, std::function<bool(drecord&, drecord&)> cmp, score& sc, int start, int last)
+{
+	bool isSorted = true;
+	for (int i(start); i < last && isSorted; i++) {
+		sc.compares++;
+		if (!cmp(array[i], array[i + 1])) {
+			isSorted = false;
+		}
+	}
+	return isSorted;
+}
