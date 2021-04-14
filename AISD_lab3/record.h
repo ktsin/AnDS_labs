@@ -28,9 +28,6 @@ public:
 			(*field_3)[i] = rand() % 5 + 97;
 		}
 	}
-	~record() {
-		delete field_3;
-	}
 	string to_string()
 	{
 		std::stringstream ss;
