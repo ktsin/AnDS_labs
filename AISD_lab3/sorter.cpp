@@ -160,12 +160,12 @@ void dsorter::BubbleSort(std::vector<drecord>& array, std::function<bool(drecord
 void dsorter::BubbleSortBy2(std::vector<drecord>& array, std::function<bool(drecord&, drecord&)> cmp, score& sc, bool check)
 {
 	bool isSorted = false;
-	int start = 0, last = array.size() - 1;
-	while (last <= array.size())
+	int start = 0, last = 0;
+	while (last < array.size())
 	{
 		time_t element = array[last].field_1;
 		start = last;
-		while (array[last].field_1 == element)
+		while (last < array.size() && array[last].field_1 == element)
 		{
 			last++;
 			sc.compares++;

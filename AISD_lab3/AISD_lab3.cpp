@@ -7,13 +7,14 @@
 #include "sorter.h"
 #include "searcher.h"
 
-#define DATA_SIZE 10
+#define DATA_SIZE 100
 #define PRINT
 #define DEFEND_
 
 time_t inputDate();
 bool cmpFirst_Up(record& a, record& b);
 void print(std::vector<record>& data);
+void print1(std::vector<drecord>& data);
 bool cmpFirst_Down(record& a, record& b);
 bool cmpSecond_Up(record& a, record& b);
 bool cmpSecond_Down(record& a, record& b);
@@ -23,7 +24,10 @@ bool cmpFirst_Exact(record& a, record& b);
 bool cmpSecond_Exact(record& a, record& b);
 bool cmpThird_Exact(record& a, record& b);
 bool cmpAll_Exact(record& a, record& b);
+bool cmpFirst_Up1(drecord& a, drecord& b);
+bool cmpSecond_Up1(drecord& a, drecord& b);
 
+using namespace std;
 using namespace std::chrono;
 
 int main()
@@ -133,6 +137,30 @@ int main()
     {
         data[i] = drecord();
     }
+    auto sc = score();
+    auto before = steady_clock::now();
+    dsorter::BubbleSort(data, cmpFirst_Up1, sc);
+    auto after = steady_clock::now();
+    std::cout << "\nSorted by 1-st field:\n\n";
+#ifdef PRINT
+    print1(data);
+#endif // !PRINT
+    std::cout << "Permutations: " << sc.permutations << "; compares: " << sc.compares << "; seconds: " << (after - before).count() * 1E-9 << "\n";
+    for (int i = 0; i < DATA_SIZE; i++)
+    {
+        data[i] = drecord();
+    }
+    sc = score();
+    before = steady_clock::now();
+    dsorter::BubbleSort(data, cmpFirst_Up1, sc);
+    dsorter::BubbleSortBy2(data, cmpSecond_Up1, sc);
+    after = steady_clock::now();
+    std::cout << "\nSorted by 2 fields:\n\n";
+#ifdef PRINT
+    print1(data);
+#endif // !PRINT
+    std::cout << "Permutations: " << sc.permutations << "; compares: " << sc.compares << "; seconds: " << (after - before).count() * 1E-9 << "\n";
+
 
 #endif // DEFEND_
 
@@ -157,6 +185,14 @@ time_t inputDate() {
 }
 
 void print(std::vector<record>& data)
+{
+    for (int i = 0; i < DATA_SIZE; i++)
+    {
+        std::cout << data[i].to_string() << "\r\n";
+    }
+}
+
+void print1(std::vector<drecord>& data)
 {
     for (int i = 0; i < DATA_SIZE; i++)
     {
@@ -204,4 +240,12 @@ bool cmpAll_Exact(record& a, record& b) {
     return a.field_3->compare(*b.field_3) == 0 
         && a.field_2 == b.field_2 
         && a.field_1 == b.field_1;
+}
+
+bool cmpFirst_Up1(drecord& a, drecord& b) {
+    return a.field_1 >= b.field_1;
+}
+
+bool cmpSecond_Up1(drecord& a, drecord& b) {
+    return a.field_2 > b.field_2;
 }

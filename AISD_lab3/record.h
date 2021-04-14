@@ -64,6 +64,17 @@ public:
 	}
 	time_t field_1 = 0;
 	time_t field_2 = 0;
+	string to_string()
+	{
+		std::stringstream ss;
+		char* buffer = new char[255]{ 0 };
+		strftime(buffer, 255, "%d/%m/%G", localtime(&this->field_1));
+		auto tmp = string(buffer);
+		ss << tmp << "; ";
+		strftime(buffer, 255, "%d/%m/%G", localtime(&this->field_2));
+		ss << buffer << ";";
+		return ss.str();
+	}
 };
 
 class score {
