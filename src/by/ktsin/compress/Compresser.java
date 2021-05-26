@@ -1,5 +1,7 @@
 package by.ktsin.compress;
 
 public interface Compresser {
-    public byte[] compress(byte[] input);
+    public String compress(String input);
+
+    public String decompress(String input);
 }
