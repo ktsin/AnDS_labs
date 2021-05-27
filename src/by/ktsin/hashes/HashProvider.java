@@ -1,5 +1,5 @@
 package by.ktsin.hashes;
 
-public interface IHashProvider {
+public interface HashProvider {
     public long hash(byte[] value, int seed);
 }

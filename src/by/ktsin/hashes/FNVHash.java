@@ -1,6 +1,6 @@
 package by.ktsin.hashes;
 
-public class FNVHash implements IHashProvider{
+public class FNVHash implements HashProvider {
     private static final long FNV_64_INIT = 0xcbf29ce484222325L;
     private static final long FNV_64_PRIME = 1099511628211L;
 
@@ -12,6 +12,6 @@ public class FNVHash implements IHashProvider{
             rv ^= b;
             rv *= FNV_64_PRIME;
         }
-        return rv;
+        return rv >>> 1;
     }
 }

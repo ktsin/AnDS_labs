@@ -1,6 +1,6 @@
 package by.ktsin.hashes;
 
-public class MurMurHash implements IHashProvider {
+public class MurMurHash implements HashProvider {
     private static final int UNSIGNED_MASK = 0xff;
     private static final long UINT_MASK = 0xFFFFFFFFL;
     private static final long LONG_MASK = 0xFFFFFFFFFFFFFFFFL;
@@ -50,6 +50,6 @@ public class MurMurHash implements IHashProvider {
         h ^= ((h >> 17) & UINT_MASK);
 
         // return the hash
-        return h;
+        return h >>> 1;
     }
 }
