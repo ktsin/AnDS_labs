@@ -2,7 +2,9 @@ package by.ktsin;
 
 import org.jetbrains.annotations.NotNull;
 
-public class PtrTree implements ITree<PtrNode> {
+import java.util.ArrayList;
+
+public class PtrTree implements Tree<PtrNode> {
     private PtrNode root = null;
 
     @Override
@@ -35,36 +37,117 @@ public class PtrTree implements ITree<PtrNode> {
 
     @Override
     public boolean remove(int value) {
+        deleteNode(root, value);
+        return true;
+    }
+
+    public void deleteNode(PtrNode node, int value){
         if (!isPresent(value))
-            return true;
+            return;
         else {
-            //if node exist, it will return itself, else -- nearest
-            PtrNode node = getNearestNode(value, root);
-            PtrNode target = (node.getValue() > value) ? node.getLeft() : node.getRight();
-            //if it is a leaf, only drop leaf
-            if (target.getLeft() == null && target.getRight() == null) {
-                node.detachNode(target);
-                return true;
+            PtrNode parent = null;
+            // start with the root node
+            PtrNode curr = root;
+            // search key in the BST and set its parent pointer
+            while (curr != null && curr.getValue() != value)
+            {
+                // update the parent to the current node
+                parent = curr;
+                // if the given key is less than the current node, go to the left subtree;
+                // otherwise, go to the right subtree
+                if (value < curr.getValue()) {
+                    curr = curr.getLeft();
+                }
+                else {
+                    curr = curr.getRight();
+                }
             }
-            //if it is generic node, we have to
-            // get most left node in right or most right in left
-            //true == left, false == right
-            boolean direction = target.getLeft() != null;
-            PtrNode replacer;
-            if (direction)
-                replacer = target.getLeft();
-            else
-                replacer = target.getRight();
+            // Case 1: node to be deleted has no children, i.e., it is a leaf node
+            assert curr != null;
+            if (curr.getLeft() == null && curr.getRight() == null)
+            {
+                // if the node to be deleted is not a root node, then set its
+                // parent left/right child to null
+                if (curr != root)
+                {
+                    assert parent != null;
+                    if (parent.getLeft() == curr) {
+                        parent.setLeft(null);
+                    }
+                    else {
+                        parent.setRight(null);
+                    }
+                }
+                // if the tree has only a root node, set it to null
+                else {
+                    root = null;
+                }
+            }
+            // Case 2: node to be deleted has two children
+            else if (curr.getLeft() != null && curr.getRight() != null)
+            {
+                // find its inorder successor node
+                PtrNode successor = getMinimumKey(curr.getRight());
 
+                // store successor value
+                int val = successor.getValue();
 
+                // recursively delete the successor. Note that the successor
+                // will have at most one child (right child)
+                deleteNode(root, successor.getValue());
 
+                // copy value of the successor to the current node
+                curr.setValue(val);
+            }
+            // Case 3: node to be deleted has only one child
+            else {
+                // choose a child node
+                PtrNode child = (curr.getLeft() != null)? curr.getLeft(): curr.getRight();
+                // if the node to be deleted is not a root node, set its parent
+                // to its child
+                if (curr != root)
+                {
+                    assert parent != null;
+                    if (curr == parent.getLeft()) {
+                        parent.setLeft(child);
+                    }
+                    else {
+                        parent.setRight(child);
+                    }
+                }
+                // if the node to be deleted is a root node, then set the root to the child
+                else {
+                    root = child;
+                }
+            }
         }
-        return false;
+        return;
+    }
+
+    private PtrNode getMinimumKey(PtrNode curr)
+    {
+        while (curr.getLeft() != null) {
+            curr = curr.getLeft();
+        }
+        return curr;
     }
 
     @Override
-    public void optimize() {
+    public void defence() {
+        ArrayList<Integer> leaves = new ArrayList<>();
+        defenceLookup(leaves, root);
+        for(int i : leaves){
+            remove(i);
+        }
+    }
 
+    private void defenceLookup(ArrayList<Integer> values, PtrNode node){
+        if(node.getLeft() == null && node.getRight() == null){
+            values.add(node.getValue());
+            return;
+        }
+        defenceLookup(values, node.getLeft());
+        defenceLookup(values, node.getRight());
     }
 
     @Override
