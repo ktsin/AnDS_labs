@@ -35,27 +35,28 @@ public class PtrTree implements ITree<PtrNode> {
 
     @Override
     public boolean remove(int value) {
-        if(!isPresent(value))
+        if (!isPresent(value))
             return true;
-        else{
+        else {
             //if node exist, it will return itself, else -- nearest
             PtrNode node = getNearestNode(value, root);
-            PtrNode target = (node.getValue() > value)?node.getLeft():node.getRight();
+            PtrNode target = (node.getValue() > value) ? node.getLeft() : node.getRight();
             //if it is a leaf, only drop leaf
-            if(target.getLeft() == null && target.getRight() == null){
+            if (target.getLeft() == null && target.getRight() == null) {
                 node.detachNode(target);
                 return true;
             }
             //if it is generic node, we have to
             // get most left node in right or most right in left
-            if(target.getLeft() != null){
-                //get most right
-                PtrNode replacer = target.getLeft();
-                while(replacer.getRight() != null)
-                    replacer = replacer.getRight();
-                getNearestNode(replacer.getValue(), root).detachNode(replacer);
-                node.replaceNode(target, replacer);
-            }
+            //true == left, false == right
+            boolean direction = target.getLeft() != null;
+            PtrNode replacer;
+            if (direction)
+                replacer = target.getLeft();
+            else
+                replacer = target.getRight();
+
+
 
         }
         return false;
@@ -94,11 +95,10 @@ public class PtrTree implements ITree<PtrNode> {
                     return search(value, node.getLeft());
                 else
                     return null;
+            else if (node.getRight() != null)
+                return search(value, node.getRight());
             else
-                if (node.getRight() != null)
-                    return search(value, node.getRight());
-                else
-                    return null;
+                return null;
         }
     }
 
