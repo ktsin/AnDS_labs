@@ -41,4 +41,9 @@ public class ArrayNode {
     public void setRight(int right) {
         this.right = right;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%5d", value);
+    }
 }

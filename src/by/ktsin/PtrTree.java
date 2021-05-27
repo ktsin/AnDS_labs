@@ -146,8 +146,10 @@ public class PtrTree implements Tree<PtrNode> {
             values.add(node.getValue());
             return;
         }
-        defenceLookup(values, node.getLeft());
-        defenceLookup(values, node.getRight());
+        if(node.getLeft() != null)
+            defenceLookup(values, node.getLeft());
+        if(node.getRight() != null)
+            defenceLookup(values, node.getRight());
     }
 
     @Override
