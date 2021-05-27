@@ -8,7 +8,10 @@ public class ArrayTree implements Tree<ArrayNode> {
 
     @Override
     public boolean isPresent(int value) {
-        return nodes.stream().anyMatch(e -> e.getValue() == value);
+        if(nodes != null)
+            return nodes.stream().anyMatch(e -> e.getValue() == value);
+        else
+            return false;
     }
 
     @Override
@@ -159,7 +162,22 @@ public class ArrayTree implements Tree<ArrayNode> {
 
     @Override
     public void defence() {
+        ArrayList<Integer> leaves = new ArrayList<>();
+        defenceLookup(leaves, nodes.get(rootIndex));
+        for(int i : leaves){
+            remove(i);
+        }
+    }
 
+    private void defenceLookup(ArrayList<Integer> values, ArrayNode node){
+        if(node.getLeft() == -1 && node.getRight() == -1){
+            values.add(node.getValue());
+            return;
+        }
+        if(node.getLeft() != -1)
+            defenceLookup(values, nodes.get(node.getLeft()));
+        if(node.getRight() != -1)
+            defenceLookup(values, nodes.get(node.getRight()));
     }
 
     private ArrayNode getNearestNode(int value, int root) {
@@ -172,5 +190,25 @@ public class ArrayTree implements Tree<ArrayNode> {
             return getNearestNode(value, nodes.get(root).getRight());
         else
             return nodes.get(root);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        printLookup(str, nodes.get(rootIndex), -4);
+        return str.toString();
+    }
+
+    private void printLookup(StringBuilder str, ArrayNode node, int spaces) {
+        if (node == null)
+            return;
+        spaces += 4;
+
+        printLookup(str, (node.getRight() == -1)?null:nodes.get(node.getRight()), spaces);
+        for (int i = 0; i < spaces; i++)
+            str.append(' ');
+        str.append(node.getValue());
+        str.append('\n');
+        printLookup(str, (node.getLeft() == -1)?null:nodes.get(node.getLeft()), spaces);
     }
 }
