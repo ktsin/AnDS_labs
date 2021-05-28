@@ -5,12 +5,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ArithmeticCoding {
-    public TreeMap<Character, Double> probabilities = new TreeMap<>();
+    private TreeMap<Character, Double> probabilities = new TreeMap<>();
     private TreeMap<Character, Double> right_interval = new TreeMap<>();
     private TreeMap<Character, Double> left_interval = new TreeMap<>();
 
+    public TreeMap<Character, Double> getProbabilities() {
+        return probabilities;
+    }
 
-    public byte[] encode(String str) {
+    public void setProbabilities(TreeMap<Character, Double> probabilities) {
+        this.probabilities = probabilities;
+    }
+
+    public byte[] encode(String str, int blockSize) {
+        //сначала побавляем лишнее
+        int originalSize = str.length();
+        int newSize = (str.length() % blockSize == 0)?(str.length() / blockSize)
+                :(blockSize*(str.length() / blockSize + 1));
+        String format = String.format("%%-%ds", newSize);
+        str = String.format(format, str);
+        format = String.format("%%-%ds", blockSize);
         // строим модель
         TreeMap<Character, Integer> count = new TreeMap<>();
         int length = str.length();
@@ -34,7 +48,8 @@ public class ArithmeticCoding {
             min += t.getValue();
         }
         // разбиваем на блоки  по 12 символов
-        Object[] blocks = Arrays.stream(str.split("(?<=\\G.{5})")).map(e -> String.format("%-5s", e)).toArray();
+        String finalFormat = format;
+        Object[] blocks = Arrays.stream(str.split("(?<=\\G.{"+blockSize+"})")).map(e -> String.format(finalFormat, e)).toArray();
         ArrayList<Double> res = new ArrayList<>();
         for (Object block : blocks) {
             double a = encodeBlock((String) block);
@@ -75,7 +90,7 @@ public class ArithmeticCoding {
                 p_left = low;
                 p_right = high;
             }
-            res += Double.MIN_VALUE;
+            res += (p_right - p_left)/2.0;
         }
         return res;
     }
@@ -86,7 +101,7 @@ public class ArithmeticCoding {
         }
     }
 
-    public String decode(byte[] input, TreeMap<Character, Double> probabilities, int length) {
+    public String decode(byte[] input, TreeMap<Character, Double> probabilities, int length, int blockSize) {
         this.probabilities = probabilities;
         Object[] sorted = probabilities.entrySet().stream().sorted(new EntrySetComparer()).toArray();
 //        double max = 0;
@@ -102,7 +117,7 @@ public class ArithmeticCoding {
         // конвертируем из байтов в даблы
         double[] doubles = byte2Double(input, false);
         for (double b : doubles) {
-            str.append(decodeBlock(b, 5));
+            str.append(decodeBlock(b, blockSize));
         }
         return str.toString();
     }
@@ -188,12 +203,13 @@ public class ArithmeticCoding {
     }
 
     public static void main(String[] args) {
+        int blockSize = 9;
         ArithmeticCoding a = new ArithmeticCoding();
         String str = "Big fucking string for testing purposes";
         System.out.println("Source: " + args[0]);
-        byte[] bytes = a.encode(args[0]);
+        byte[] bytes = a.encode(args[0], blockSize);
         int l = 0;
-        String res = a.decode(bytes, a.probabilities, args[0].length());
+        String res = a.decode(bytes, a.probabilities, args[0].length(), blockSize);
         System.out.println("Result: " + res);
     }
 }
